@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculus Adventure: The Math Kingdom</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%B0%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Calculus Adventure: The Math Kingdom, a pixel adventure game made with HTML, CSS and JavaScript.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="sym">∫</div><div class="sym">π</div><div class="sym">Σ</div><div class="sym">√</div>
+
+  <div class="castle"><div class="tower l"></div><div class="wall"></div><div class="tower r"></div><div class="gate"></div></div>
+  <div class="ground"></div>
+
+  <main>
+    <h1>Calculus Adventure</h1>
+    <p class="sub">The Math Kingdom</p>
+    <p class="tip" id="tip"></p>
+    <nav>
+      <a class="btn play" href="game.html">Play</a>
+      <button class="btn" id="how">How to play</button>
+      <button class="btn" id="mode">Day / Night</button>
+      <button class="btn" id="music">Music: On</button>
+    </nav>
+    <p class="tip" id="hint" style="margin-top:18px"></p>
+  </main>
+
+  <span class="ver">v0.1</span>
+
+  <dialog id="dlg">
+    <h2>How to play</h2>
+    <ul>
+      <li>Explore the kingdom, one area at a time.</li>
+      <li>Each guardian asks a calculus question.</li>
+      <li>Answer right to move on. A wrong answer costs a heart.</li>
+      <li>Reach the castle to become Champion of Calculus.</li>
+    </ul>
+    <button class="btn" id="close">Close</button>
+  </dialog>
+
+<script src="music.js"></script>
+<script>
+(function () {
+  var tips = [
+    "The limit is the first step.",
+    "Slopes are just derivatives.",
+    "Integrals collect the area.",
+    "Don’t forget the + C!",
+    "The chain rule links everything."
+  ];
+  document.getElementById("tip").textContent = tips[Math.floor(Math.random() * tips.length)];
+
+  var dlg = document.getElementById("dlg");
+  document.getElementById("how").addEventListener("click", function () { dlg.showModal(); });
+  document.getElementById("close").addEventListener("click", function () { dlg.close(); });
+
+  document.getElementById("mode").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  /* title-screen music */
+  var musicBtn = document.getElementById("music");
+  var hint = document.getElementById("hint");
+  function musicLabel() { musicBtn.textContent = "Music: " + (Music.isMuted() ? "Off" : "On"); }
+  if (window.Music) {
+    Music.play("terraria-theme.mp3", 0.5);
+    musicLabel();
+    musicBtn.addEventListener("click", function () { Music.setMuted(!Music.isMuted()); musicLabel(); });
+    setTimeout(function () {
+      if (!Music.isMuted() && !Music.isPlaying()) hint.textContent = "Click anywhere to start the music";
+    }, 400);
+    ["pointerdown", "keydown"].forEach(function (ev) {
+      window.addEventListener(ev, function () { hint.textContent = ""; }, { once: true });
+    });
+  } else {
+    musicBtn.hidden = true;
+  }
+})();
+</script>
+</body>
+</html>
